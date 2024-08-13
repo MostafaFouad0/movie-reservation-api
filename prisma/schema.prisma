@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id        Int      @id @default(autoincrement())
+  firstName String
+  lastName  String
+  age       Int
+  role      String
+  email     String
+  password  String
+  createdAt DateTime @default(now())
+  ticket    ticket[]
+}
+
+model moive {
+  id             Int        @id @default(autoincrement())
+  title          String
+  desciption     String
+  genre          String
+  age_restricted Boolean
+  poster         String
+  duration       Int
+  release_date   DateTime
+  end_date       DateTime
+  showtime       showtime[]
+}
+
+model hall {
+  id                Int          @id @default(autoincrement())
+  title             String       @unique
+  vip_seats_cnt     Int
+  regular_seats_cnt Int
+  showtime          showtime[]
+  hall_seats        hall_seats[]
+  ticket            ticket[]
+}
+
+model showtime {
+  id                 Int             @id @default(autoincrement())
+  showtime_hall      hall            @relation(fields: [hall_id], references: [id])
+  hall_id            Int
+  showtime_movie     moive           @relation(fields: [movie_id], references: [id])
+  movie_id           Int
+  showtime_start     DateTime
+  showtime_end       DateTime
+  vip_seat_price     Int
+  regular_seat_price Int
+  showtime_date      DateTime
+  showtime_seat      showtime_seat[]
+  ticket             ticket[]
+}
+
+model hall_seats {
+  id            Int             @id @default(autoincrement())
+  hall_seat     hall            @relation(fields: [hall_id], references: [id])
+  hall_id       Int
+  seat_type     String
+  showtime_seat showtime_seat[]
+  ticket        ticket[]
+}
+
+model showtime_seat {
+  seat_id     hall_seats @relation(fields: [id], references: [id])
+  id          Int
+  showtime    showtime   @relation(fields: [showtime_id], references: [id])
+  showtime_id Int
+  available   Boolean
+
+  @@id([id, showtime_id])
+}
+
+model ticket {
+  id              Int        @id @default(autoincrement())
+  user_ticket     user       @relation(fields: [user_id], references: [id])
+  user_id         Int
+  showtime_ticket showtime   @relation(fields: [showtime_id], references: [id])
+  showtime_id     Int
+  seat_ticket     hall_seats @relation(fields: [seat_id], references: [id])
+  seat_id         Int
+  hall_ticket     hall       @relation(fields: [hall_id], references: [id])
+  hall_id         Int
+  issued_date     DateTime   @default(now())
+  expired         Boolean
+  price           Int
+}

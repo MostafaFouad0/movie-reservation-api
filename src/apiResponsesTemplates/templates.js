@@ -1,34 +1,31 @@
-function formatFailToJSend(msg, status = 400) {
-  const jsendError = {
+function formatFailToJSend(msg) {
+  const jsendFail = {
     status: "Fail",
     data: {
       message: msg,
-      status: status,
     },
   };
-  return jsendError;
+  return jsendFail;
 }
 
-function formatErrorToJSend(msg, status = 500) {
+function formatErrorToJSend(msg) {
   const jsendError = {
     status: "Error",
     data: {
       message: msg,
-      status: status,
     },
   };
   return jsendError;
 }
-function formatSuccessToJSend(msg, status = 200, value = {}) {
-  const jsendError = {
+function formatSuccessToJSend(msg, value = null) {
+  const jsendSuccess = {
     status: "Ok",
     data: {
       message: msg,
-      value: value,
-      status: status,
+      values: value,
     },
   };
-  return jsendError;
+  return jsendSuccess;
 }
 
 module.exports = {

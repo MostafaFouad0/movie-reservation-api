@@ -19,7 +19,7 @@ model user {
   ticket    ticket[]
 }
 
-model moive {
+model movie {
   id             Int        @id @default(autoincrement())
   title          String
   desciption     String
@@ -30,6 +30,7 @@ model moive {
   release_date   DateTime
   end_date       DateTime
   showtime       showtime[]
+  ticket         ticket[]
 }
 
 model hall {
@@ -43,18 +44,17 @@ model hall {
 }
 
 model showtime {
-  id                 Int             @id @default(autoincrement())
-  showtime_hall      hall            @relation(fields: [hall_id], references: [id])
+  id                 Int                @id @default(autoincrement())
+  showtime_hall      hall               @relation(fields: [hall_id], references: [id])
   hall_id            Int
-  showtime_movie     moive           @relation(fields: [movie_id], references: [id])
+  showtime_movie     movie              @relation(fields: [movie_id], references: [id])
   movie_id           Int
   showtime_start     DateTime
   showtime_end       DateTime
   vip_seat_price     Int
   regular_seat_price Int
-  showtime_date      DateTime
   showtime_seat      showtime_seat[]
-  ticket             ticket[]
+  showtime_details   showtime_details[]
 }
 
 model hall_seats {
@@ -77,16 +77,24 @@ model showtime_seat {
 }
 
 model ticket {
-  id              Int        @id @default(autoincrement())
-  user_ticket     user       @relation(fields: [user_id], references: [id])
-  user_id         Int
-  showtime_ticket showtime   @relation(fields: [showtime_id], references: [id])
-  showtime_id     Int
-  seat_ticket     hall_seats @relation(fields: [seat_id], references: [id])
-  seat_id         Int
-  hall_ticket     hall       @relation(fields: [hall_id], references: [id])
-  hall_id         Int
-  issued_date     DateTime   @default(now())
-  expired         Boolean
-  price           Int
+  id           Int        @id @default(autoincrement())
+  user_ticket  user       @relation(fields: [user_id], references: [id])
+  user_id      Int
+  seat_ticket  hall_seats @relation(fields: [seat_id], references: [id])
+  seat_id      Int
+  hall_ticket  hall       @relation(fields: [hall_id], references: [id])
+  hall_id      Int
+  movie_ticket movie      @relation(fields: [movie_id], references: [id])
+  movie_id     Int
+  issued_date  DateTime   @default(now())
+  expired      Boolean
+  price        Int
+}
+
+model showtime_details {
+  showtime_relation showtime @relation(fields: [showtime_id], references: [id])
+  showtime_id       Int
+  showtime_date     DateTime
+
+  @@id([showtime_id, showtime_date])
 }

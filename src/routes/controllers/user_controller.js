@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const { generateToken } = require("../../auth/jwt_auth");
+const { hashPassword, checkPassword } = require("../../utils/password_utils");
 const prisma = new PrismaClient();
 const {
   formatErrorToJSend,
@@ -17,6 +18,11 @@ const sigupUser = async (req, res) => {
   if (user) {
     return res.status(400).json(formatFailToJSend("Email already exists."));
   }
+
+  // hashing user's password
+  const hashed_password = await hashPassword(newUserData.password);
+  newUserData.password = hashed_password;
+
   // storing the user's info in the database
   user = await prisma.user.create({
     data: newUserData,
@@ -40,7 +46,11 @@ const loginUser = async (req, res) => {
       email: userCredentials.email,
     },
   });
-  if (!user || !user.active || userCredentials.password != user.password) {
+  if (
+    !user ||
+    !user.active ||
+    !(await checkPassword(userCredentials.password, user.password))
+  ) {
     return res
       .status(400)
       .json(formatFailToJSend(" invalid email or password."));

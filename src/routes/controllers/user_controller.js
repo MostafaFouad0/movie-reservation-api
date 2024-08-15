@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const { generateToken } = require("../../auth/jwt_auth");
 const { hashPassword, checkPassword } = require("../../utils/password_utils");
+const { getPayload } = require("../../auth/jwt_auth");
 const prisma = new PrismaClient();
 const {
   formatErrorToJSend,
@@ -29,7 +30,7 @@ const sigupUser = async (req, res) => {
   });
   return res
     .status(200)
-    .json(formatSuccessToJSend("user created successfully.", user));
+    .json(formatSuccessToJSend("user created successfully, please login."));
 };
 const loginUser = async (req, res) => {
   const userCredentials = req.body;
@@ -62,4 +63,49 @@ const loginUser = async (req, res) => {
     .status(200)
     .json(formatSuccessToJSend("all data are valid", generateToken(Payload)));
 };
-module.exports = { sigupUser, loginUser };
+const changePassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  if (!oldPassword)
+    return res.status(400).json(formatFailToJSend("password is required"));
+  if (!newPassword) {
+    return res.status(400).json(formatFailToJSend("new password is required"));
+  }
+  if (newPassword.length < 8) {
+    return res
+      .status(400)
+      .json(formatFailToJSend("new password must be atlease of size 8."));
+  }
+  // get the token
+  const authHeader = req.headers["authorization"];
+  const token = authHeader.split(" ")[1];
+
+  const payload = getPayload(token);
+
+  const user = await prisma.user.findFirst({
+    where: {
+      id: payload.id,
+    },
+  });
+  if (
+    !user ||
+    !user.active ||
+    !(await checkPassword(oldPassword, user.password))
+  )
+    return res
+      .status(400)
+      .json(formatFailToJSend("invalid email or password."));
+
+  const hashed_password = await hashPassword(newPassword);
+  await prisma.user.update({
+    where: {
+      id: payload.id,
+    },
+    data: {
+      password: hashed_password,
+    },
+  });
+  return res
+    .status(200)
+    .json(formatSuccessToJSend("user password has been updated."));
+};
+module.exports = { sigupUser, loginUser, changePassword };

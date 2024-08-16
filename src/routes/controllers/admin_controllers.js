@@ -5,13 +5,13 @@ const {
   formatSuccessToJSend,
   formatFailToJSend,
 } = require("../../apiResponsesTemplates/templates");
-
+const { checkAdminRole } = require("../../utils/checkAdminToken");
 const changeToAdmin = async (req, res) => {
   const userId = +req.params.user_id;
   const authHeader = req.headers["authorization"];
   const token = authHeader.split(" ")[1];
   const payload = getPayload(token);
-  if (payload.role != "admin")
+  if (!checkAdminRole(payload))
     return res
       .status(401)
       .json(

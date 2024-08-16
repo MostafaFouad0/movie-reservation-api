@@ -7,8 +7,8 @@ const adminRoutes = require("./src/routes/admin/admin_routes");
 const moviesRoutes = require("./src/routes/movies/movies_routes");
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/movies/", moviesRoutes);
+app.use("/api/movies", moviesRoutes);
 
 app.listen(process.env.PORT, () => {
-  console.log("server is running on port:", process.env.PORT);
+  console.log("[!] server is running on port:", process.env.PORT);
 });

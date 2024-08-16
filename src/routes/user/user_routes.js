@@ -4,7 +4,7 @@ const {
   loginUser,
   changePassword,
 } = require("../controllers/user_controller");
-const { checkUserInfo } = require("../../middlewars/checkUserInfo");
+const { checkUserInfo } = require("../../middlewars/validateRequestBody");
 const { checkToken } = require("../../middlewars/checkValidToken");
 
 const router = express.Router();

@@ -11,7 +11,7 @@ function checkToken(req, res, next) {
     if (err)
       return res
         .status(403)
-        .json(formatFailToJSend("access denied due to expired token"));
+        .json(formatFailToJSend("access denied due to invalid or expired token"));
     req.user = user;
     next();
   });

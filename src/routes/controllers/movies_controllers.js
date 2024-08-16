@@ -6,6 +6,7 @@ const {
   formatSuccessToJSend,
   formatFailToJSend,
 } = require("../../apiResponsesTemplates/templates");
+const { checkAdminRole } = require("../../utils/checkAdminToken");
 const prisma = new PrismaClient();
 
 const getMovies = async (req, res) => {
@@ -19,4 +20,19 @@ const getMovies = async (req, res) => {
   return res.status(200).json(formatSuccessToJSend("Data retrieved.", movies));
 };
 
-module.exports = { getMovies };
+const addMovie = async (req, res) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader.split(" ")[1];
+
+  const payload = getPayload(token);
+  if (!checkAdminRole(payload))
+    res.status(401).json(formatFailToJSend("unauthorized"));
+  const movie = await prisma.movie.create({
+    data: req.body,
+  });
+  res
+    .status(200)
+    .json(formatSuccessToJSend("movie added successfully.", movie));
+};
+
+module.exports = { getMovies, addMovie };

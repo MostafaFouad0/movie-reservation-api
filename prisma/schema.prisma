@@ -23,7 +23,7 @@ model user {
 model movie {
   id             Int        @id @default(autoincrement())
   title          String
-  desciption     String
+  description    String
   genre          String
   age_restricted Boolean
   poster         String

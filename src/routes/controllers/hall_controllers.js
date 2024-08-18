@@ -9,12 +9,6 @@ const { checkAdminRole } = require("../../utils/checkAdminToken");
 const prisma = new PrismaClient();
 
 const getHalls = async (req, res) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader.split(" ")[1];
-
-  const payload = getPayload(token);
-  if (!checkAdminRole(payload))
-    return res.status(401).json(formatFailToJSend("unauthorized"));
   const page = +req.query.page || 1;
   const limit = +req.query.limit || 10;
   const skip = (page - 1) * limit;
@@ -26,12 +20,6 @@ const getHalls = async (req, res) => {
 };
 
 const addHall = async (req, res) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader.split(" ")[1];
-
-  const payload = getPayload(token);
-  if (!checkAdminRole(payload))
-    return res.status(401).json(formatFailToJSend("unauthorized"));
   const newHall = await prisma.hall.create({
     data: req.body,
   });

@@ -1,10 +1,9 @@
 const express = require("express");
-const { checkToken } = require("../../middlewars/checkValidToken");
-const { changeToAdmin } = require("../controllers/admin_controllers");
-const { checkAdminToken } = require("../../middlewars/checkAdminToken");
 const router = express.Router();
-router.use(express.json());
+const { checkToken } = require("../../middlewars/checkValidToken");
+const { addSeats } = require("../controllers/seats_controllers");
+const { checkAdminToken } = require("../../middlewars/checkAdminToken");
 
-router.patch("/:user_id", checkToken, checkAdminToken, changeToAdmin);
+router.post("/:hall_id", checkToken, checkAdminToken, addSeats);
 
 module.exports = router;

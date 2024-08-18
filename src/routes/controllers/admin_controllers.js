@@ -8,15 +8,6 @@ const {
 const { checkAdminRole } = require("../../utils/checkAdminToken");
 const changeToAdmin = async (req, res) => {
   const userId = +req.params.user_id;
-  const authHeader = req.headers["authorization"];
-  const token = authHeader.split(" ")[1];
-  const payload = getPayload(token);
-  if (!checkAdminRole(payload))
-    return res
-      .status(401)
-      .json(
-        formatFailToJSend("you are not unauthorized to access this endpoint.")
-      );
   const user = await prisma.user.findFirst({
     where: {
       id: userId,

@@ -1,8 +1,9 @@
-function formatFailToJSend(msg) {
+function formatFailToJSend(msg, value = []) {
   const jsendFail = {
     status: "Fail",
     data: {
       message: msg,
+      values: value,
     },
   };
   return jsendFail;

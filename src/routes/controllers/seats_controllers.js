@@ -11,7 +11,7 @@ const prisma = new PrismaClient();
 const addSeats = async (req, res) => {
   if (!req.files || !req.files.file)
     return res.status(422).json(formatFailToJSend("No files were uploaded"));
-  const { hall_id } = +req.params;
+  const hall_id = +req.params.hall_id;
   const hall = await prisma.hall.findFirst({
     where: {
       id: hall_id,

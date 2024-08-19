@@ -50,8 +50,8 @@ model showtime {
   hall_id            Int
   showtime_movie     movie              @relation(fields: [movie_id], references: [id])
   movie_id           Int
-  showtime_start     DateTime
-  showtime_end       DateTime
+  showtime_start     String
+  showtime_end       String
   vip_seat_price     Int
   regular_seat_price Int
   showtime_seat      showtime_seat[]

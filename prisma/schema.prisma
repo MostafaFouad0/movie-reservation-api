@@ -28,8 +28,8 @@ model movie {
   age_restricted Boolean
   poster         String
   duration       Int
-  release_date   DateTime
-  end_date       DateTime
+  release_date   String
+  end_date       String
   showtime       showtime[]
   ticket         ticket[]
 }
@@ -95,7 +95,7 @@ model ticket {
 model showtime_details {
   showtime_relation showtime @relation(fields: [showtime_id], references: [id])
   showtime_id       Int
-  showtime_date     DateTime
+  showtime_date     String
 
   @@id([showtime_id, showtime_date])
 }

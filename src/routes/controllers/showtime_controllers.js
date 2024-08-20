@@ -20,6 +20,12 @@ function getDatesBetween(startDate, endDate) {
 
   return dates;
 }
+
+function validTimes(start, end) {
+  start = timeToMinutes(start);
+  end = timeToMinutes(end);
+  return start < end;
+}
 const addShowtime = async (req, res) => {
   const {
     hall_id,
@@ -29,6 +35,11 @@ const addShowtime = async (req, res) => {
     vip_seat_price,
     regular_seat_price,
   } = req.body;
+  if (!validTimes(showtime_start, showtime_end)) {
+    return res
+      .status(400)
+      .json(formatFailToJSend("end time must be after the start time"));
+  }
   // get all showtimes that will be held in this hall
   const hall = await prisma.hall.findFirst({
     where: {

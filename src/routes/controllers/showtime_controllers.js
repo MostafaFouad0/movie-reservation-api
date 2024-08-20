@@ -114,4 +114,15 @@ const addShowtime = async (req, res) => {
     .json(formatSuccessToJSend("showtime added successfully", newShowtime));
 };
 
-module.exports = { addShowtime };
+const getShowtimes = async (req, res) => {
+  const movie_id = +req.params.movie_id;
+  const showtimes = await prisma.showtime.findMany({
+    where: {
+      movie_id: movie_id,
+    },
+  });
+  res
+    .status(200)
+    .json(formatSuccessToJSend("data retrieved successfully", showtimes));
+};
+module.exports = { addShowtime, getShowtimes };

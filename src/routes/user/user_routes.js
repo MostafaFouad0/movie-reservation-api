@@ -8,7 +8,6 @@ const { checkUserInfo } = require("../../middlewars/validateRequestBody");
 const { checkToken } = require("../../middlewars/checkValidToken");
 
 const router = express.Router();
-router.use(express.json());
 
 router.post("/signup", checkUserInfo, sigupUser);
 router.post("/login", loginUser);

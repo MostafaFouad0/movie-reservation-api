@@ -5,7 +5,6 @@ const {
   formatSuccessToJSend,
   formatFailToJSend,
 } = require("../../apiResponsesTemplates/templates");
-const { checkAdminRole } = require("../../utils/checkAdminToken");
 const changeToAdmin = async (req, res) => {
   const userId = +req.params.user_id;
   const user = await prisma.user.findFirst({

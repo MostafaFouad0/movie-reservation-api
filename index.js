@@ -8,6 +8,7 @@ const adminRoutes = require("./src/routes/admin/admin_routes");
 const moviesRoutes = require("./src/routes/movies/movies_routes");
 const hallRoutes = require("./src/routes/hall/hall_routes");
 const seatsRoutes = require("./src/routes/seats/seats_routes");
+const showtimeRoutes = require("./src/routes/showtime/showtime_routes");
 app.use(
   fileUpload({
     limits: { fileSize: 5 * 1024 * 1024 },
@@ -18,7 +19,8 @@ app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/movies", moviesRoutes);
 app.use("/api/hall", hallRoutes);
-app.use("/api/seats/", seatsRoutes);
+app.use("/api/seats", seatsRoutes);
+app.use("/api/showtimes", showtimeRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log("[!] server is running on port:", process.env.PORT);

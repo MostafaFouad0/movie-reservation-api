@@ -45,7 +45,6 @@ const addSeats = async (req, res) => {
       )
     );
   }
-  // console.log("content = >", to_be_added_counts, parsed_input);
   for (var i = 0; i < parsed_input.data.length; i++) {
     await prisma.hall_seats.create({
       data: {

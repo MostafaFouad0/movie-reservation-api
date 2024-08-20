@@ -31,7 +31,6 @@ model movie {
   release_date   String
   end_date       String
   showtime       showtime[]
-  ticket         ticket[]
 }
 
 model hall {
@@ -54,42 +53,33 @@ model showtime {
   showtime_end       String
   vip_seat_price     Int
   regular_seat_price Int
-  showtime_seat      showtime_seat[]
   showtime_details   showtime_details[]
+
+  ticket ticket[]
 }
 
 model hall_seats {
-  id            Int             @id @default(autoincrement())
-  hall_seat     hall            @relation(fields: [hall_id], references: [id])
-  hall_id       Int
-  seat_type     String
-  showtime_seat showtime_seat[]
-  ticket        ticket[]
-}
-
-model showtime_seat {
-  seat_id     hall_seats @relation(fields: [id], references: [id])
-  id          Int
-  showtime    showtime   @relation(fields: [showtime_id], references: [id])
-  showtime_id Int
-  available   Boolean
-
-  @@id([id, showtime_id])
+  id        Int      @id @default(autoincrement())
+  hall_seat hall     @relation(fields: [hall_id], references: [id])
+  hall_id   Int
+  seat_type String
+  ticket    ticket[]
 }
 
 model ticket {
-  id           Int        @id @default(autoincrement())
-  user_ticket  user       @relation(fields: [user_id], references: [id])
-  user_id      Int
-  seat_ticket  hall_seats @relation(fields: [seat_id], references: [id])
-  seat_id      Int
-  hall_ticket  hall       @relation(fields: [hall_id], references: [id])
-  hall_id      Int
-  movie_ticket movie      @relation(fields: [movie_id], references: [id])
-  movie_id     Int
-  issued_date  DateTime   @default(now())
-  expired      Boolean
-  price        Int
+  id                Int        @id @default(autoincrement())
+  user_ticket       user       @relation(fields: [user_id], references: [id])
+  user_id           Int
+  seat_ticket       hall_seats @relation(fields: [seat_id], references: [id])
+  seat_id           Int
+  hall_ticket       hall       @relation(fields: [hall_id], references: [id])
+  hall_id           Int
+  showtime_relation showtime   @relation(fields: [showtime_id], references: [id])
+  showtime_id       Int
+  showtime_date     String
+  issued_date       DateTime   @default(now())
+  expired           Boolean
+  price             Int
 }
 
 model showtime_details {

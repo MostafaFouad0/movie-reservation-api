@@ -21,6 +21,11 @@ const getMovies = async (req, res) => {
 };
 
 const addMovie = async (req, res) => {
+  if (new Date(req.body.release_date) >= new Date(req.body.end_date)) {
+    return res
+      .status(400)
+      .json(formatFailToJSend("end date must be after the release date"));
+  }
   const movie = await prisma.movie.create({
     data: req.body,
   });

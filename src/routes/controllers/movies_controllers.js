@@ -1,12 +1,9 @@
 const { PrismaClient } = require("@prisma/client");
-const { generateToken } = require("../../auth/jwt_auth");
-const { getPayload } = require("../../auth/jwt_auth");
 const {
   formatErrorToJSend,
   formatSuccessToJSend,
   formatFailToJSend,
 } = require("../../apiResponsesTemplates/templates");
-const { checkAdminRole } = require("../../utils/checkAdminToken");
 const prisma = new PrismaClient();
 
 const getMovies = async (req, res) => {

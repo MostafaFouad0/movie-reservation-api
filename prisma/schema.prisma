@@ -40,7 +40,6 @@ model hall {
   regular_seats_cnt Int
   showtime          showtime[]
   hall_seats        hall_seats[]
-  ticket            ticket[]
 }
 
 model showtime {
@@ -72,13 +71,11 @@ model ticket {
   user_id           Int
   seat_ticket       hall_seats @relation(fields: [seat_id], references: [id])
   seat_id           Int
-  hall_ticket       hall       @relation(fields: [hall_id], references: [id])
-  hall_id           Int
   showtime_relation showtime   @relation(fields: [showtime_id], references: [id])
   showtime_id       Int
   showtime_date     String
   issued_date       DateTime   @default(now())
-  expired           Boolean
+  expired           Boolean    @default(false)
   price             Int
 }
 

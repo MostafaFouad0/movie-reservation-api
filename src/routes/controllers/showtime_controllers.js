@@ -119,10 +119,49 @@ const getShowtimes = async (req, res) => {
   const showtimes = await prisma.showtime.findMany({
     where: {
       movie_id: movie_id,
+      deleted: false,
     },
   });
   res
     .status(200)
     .json(formatSuccessToJSend("data retrieved successfully", showtimes));
 };
-module.exports = { addShowtime, getShowtimes };
+const deleteShowtime = async (req, res) => {
+  const showtime_id = +req.params.showtime_id;
+  const showtime = await prisma.showtime.findFirst({
+    where: {
+      id: showtime_id,
+    },
+  });
+  if (!showtime) {
+    return res
+      .status(400)
+      .json(formatFailToJSend("there is no showtime with this id"));
+  }
+  const tickets = await prisma.ticket.findFirst({
+    where: {
+      id: showtime_id,
+      expired: false,
+    },
+  });
+  if (tickets) {
+    return res
+      .status(400)
+      .json(formatFailToJSend("there is a reservation for this showtime."));
+  }
+  await prisma.showtime_details.deleteMany({
+    where: {
+      showtime_id: showtime_id,
+    },
+  });
+  await prisma.showtime.update({
+    where: {
+      id: showtime_id,
+    },
+    data: {
+      deleted: true,
+    },
+  });
+  res.status(200).json(formatSuccessToJSend("showtime deleted successfully"));
+};
+module.exports = { addShowtime, getShowtimes, deleteShowtime };

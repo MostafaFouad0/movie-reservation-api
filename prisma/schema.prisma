@@ -54,8 +54,8 @@ model showtime {
   vip_seat_price     Int
   regular_seat_price Int
   showtime_details   showtime_details[]
-
-  ticket ticket[]
+  deleted            Boolean            @default(false)
+  ticket             ticket[]
 }
 
 model hall_seats {

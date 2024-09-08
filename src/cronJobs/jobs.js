@@ -55,11 +55,37 @@ var updateExpiredTickets = cron.schedule(
         }
       }
     }
-    console.log("number of records updated :", count);
+    console.log("number of expired tikcets :", count);
+  },
+  {
+    scheduled: false,
+  }
+);
+var UpdateExpiredShowtimes = cron.schedule(
+  "*/1440 * * * *",
+  async () => {
+    const currentDate = new Date()
+      .toISOString()
+      .split("T")[0]
+      .replace(/-/g, "/");
+
+    const updateExpiredShowtimes = await prisma.showtime.updateMany({
+      where: {
+        showtime_movie: {
+          end_date: {
+            lt: currentDate,
+          },
+        },
+      },
+      data: {
+        deleted: true, // Mark the showtime as deleted (expired)
+      },
+    });
+    console.log("Showtimes Updated!");
   },
   {
     scheduled: false,
   }
 );
 
-module.exports = { updateExpiredTickets };
+module.exports = { updateExpiredTickets, UpdateExpiredShowtimes };

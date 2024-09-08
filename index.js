@@ -10,7 +10,10 @@ const hallRoutes = require("./src/routes/hall/hall_routes");
 const seatsRoutes = require("./src/routes/seats/seats_routes");
 const showtimeRoutes = require("./src/routes/showtime/showtime_routes");
 const reservationsRoutes = require("./src/routes/reservations/reservations_routes");
-const { updateExpiredTickets } = require("./src/cronJobs/jobs");
+const {
+  updateExpiredTickets,
+  UpdateExpiredShowtimes,
+} = require("./src/cronJobs/jobs");
 app.use(
   fileUpload({
     limits: { fileSize: 5 * 1024 * 1024 },
@@ -27,4 +30,5 @@ app.use("/api/reservations", reservationsRoutes);
 app.listen(process.env.PORT, () => {
   console.log("[!] server is running on port:", process.env.PORT);
   updateExpiredTickets.start();
+  UpdateExpiredShowtimes.start();
 });
